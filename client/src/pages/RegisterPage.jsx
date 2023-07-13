@@ -3,14 +3,14 @@ import {useState} from 'react'
 
 
 export default function RegisterPage(){
-    const [Username, setUsername] = useState('');
-    const [Password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     async function register(ev) {
         ev.preventDefault();
-        await fetch('http://localhost:4000',{
+        await fetch('http://localhost:4000/register',{
             method:'POST',
-            body:JSON.stringify({Username},{Password}),
+            body:JSON.stringify({username,password}),
             headers:{'Content-Type':'application/json'},
         })
 
@@ -21,11 +21,11 @@ export default function RegisterPage(){
         <h1>Register</h1>
         <input type="text"
             placeholder="username"
-            value={Username}
+            value={username}
             onChange={ev => setUsername(ev.target.value)} />
         <input type="password" 
             placeholder="password" 
-            value={Password}
+            value={password}
             onChange={ev => setPassword(ev.target.value)}/>
         <button>Register</button>
     </form>
