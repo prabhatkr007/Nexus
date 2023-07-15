@@ -7,6 +7,7 @@ const PORT = process.env.PORT;
 const bcrypt = require('bcrypt');
 const salt = bcrypt.genSaltSync(10);
 const secret = process.env.SECRET_KEY;
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const jwt = require('jsonwebtoken');
@@ -21,9 +22,10 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
-  res.json('test Ok');
+  res.json('server is Ok');
 });
 
 app.post('/register', async (req, res) => {
@@ -47,16 +49,34 @@ app.post('/login', async (req,res) => {
     if(passOk){
         //logedin
         jwt.sign({username,id:userDoc.id},secret,{}, (err,token) => {
+
             if(err) throw err;
-            res.cookie('token',token).json('jwt generated');
+            res.cookie('token',token).json({
+                id:userDoc._id,
+                username,
+            }
+            );
         });
         // req.json();,()
     }else{
         res.status(400).json('wrong credentials');
     }
-})
+});
+
+app.get('/profile' , (req, res ) => {
+    const{token} = req.cookies;
+    jwt.verify(token,secret,{}, (err,info) =>{
+        if(err) throw err;
+        res.json(info);
+    });
+
+});
+
+app.post('/logout',(req, res) => {
+    res.cookie('token','').json('logout');
+});
 
 
 app.listen(PORT, () => {
-  console.log(`Server is running at ${PORT}`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
