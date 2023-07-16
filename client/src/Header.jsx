@@ -26,7 +26,7 @@ export default function Header() {
       method: 'POST',
     })
     .then(() => {
-      setUserInfo(null);
+      setUserInfo({});
     })
     .catch(error => {
       console.log('Logout failed:', error);

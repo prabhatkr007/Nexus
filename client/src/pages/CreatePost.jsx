@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const modules = {
     toolbar: [
@@ -25,6 +25,7 @@ export default function CreatePost(){
     const[summary, setSummary] = useState('');
     const[content, setContent] = useState('');
     const[files, setFiles] = useState('');
+    const navigate = useNavigate();
 
     async function createNewPost(ev){
 
@@ -42,7 +43,10 @@ export default function CreatePost(){
         });
 
         if(response.ok){
-            Navigate('/');
+            navigate('/');
+        }
+        if(response.status === 500){
+          alert('Upload image file !')
         }
     }
 

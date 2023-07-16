@@ -83,60 +83,79 @@ app.post('/logout',(req, res) => {
     res.cookie('token','').json('logout');
 });
 
-app.post('/post',uploadMiddleware.single('file') ,async (req,res) => {
-    const {originalname, path} = req.file;
-    const parts = originalname.split('.');
-    const ext = parts[parts.length-1];
-    const newPath = path+'.'+ext;
-    fs.renameSync(path, newPath);
-
-    const{token} = req.cookies;
-    jwt.verify(token,secret,{}, async(err,info) =>{
-        if(err) throw err;
-
-        const {title,summary, content} = req.body;
-        const postDoc = await Post.create({
-            title,
-            summary,
-            content,
-            cover:newPath,
-            author:info.id,
-        });
-    });
-   
-   
-});
-
-app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
-    let newPath = null;
-    if (req.file) {
+app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
+    try {
       const { originalname, path } = req.file;
       const parts = originalname.split('.');
       const ext = parts[parts.length - 1];
-      newPath = path + '.' + ext;
+      const newPath = path + '.' + ext;
       fs.renameSync(path, newPath);
+  
+      const { token } = req.cookies;
+      jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+  
+        const { title, summary, content } = req.body;
+        const postDoc = await Post.create({
+          title,
+          summary,
+          content,
+          cover: newPath,
+          author: info.id,
+        });
+  
+        res.json(postDoc);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Internal Server Error');
     }
-  
-    const { token } = req.cookies;
-    jwt.verify(token, secret, {}, async (err, info) => {
-      if (err) throw err;
-      const { id, title, summary, content } = req.body;
-      const postDoc = await Post.findById(id);
-      const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-      if (!isAuthor) {
-        return res.status(400).json('You are not the author');
+  });
+
+  app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
+    try {
+      let newPath = null;
+      if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
       }
-      postDoc.title = title;
-      postDoc.summary = summary;
-      postDoc.content = content;
-      postDoc.cover = newPath ? newPath : postDoc.cover;
   
-      await postDoc.save(); // Save the updated document
+      const { token } = req.cookies;
+      jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
   
-      res.json(postDoc);
-    });
+        const { id, title, summary, content } = req.body;
+        const postDoc = await Post.findById(id);
+        if (!postDoc) {
+          return res.status(404).json('Post not found');
+        }
+  
+        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+        if (!isAuthor) {
+          return res.status(400).json('You are not the author');
+        }
+  
+        postDoc.title = title;
+        postDoc.summary = summary;
+        postDoc.content = content;
+        postDoc.cover = newPath ? newPath : postDoc.cover;
+  
+        await postDoc.save(); // Save the updated document
+  
+        res.json(postDoc);
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Internal Server Error');
+    }
   });
   
+
+  
+
 
 app.get('/post',async(req, res) => {
     res.json(
@@ -154,7 +173,11 @@ app.get('/post/:id', async (req, res) => {
 
 })
 
-
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json('Internal Server Error');
+  });
+  
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
