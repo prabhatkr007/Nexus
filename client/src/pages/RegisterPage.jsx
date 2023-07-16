@@ -10,20 +10,26 @@ export default function RegisterPage(){
 
     async function register(ev) {
         ev.preventDefault();
-     
-            const response = await fetch('http://localhost:4000/register',{
-            method:'POST',
-            body:JSON.stringify({username,password}),
-            headers:{'Content-Type':'application/json'},
-        })
-        if(response.status === 400){
-            alert('Registration Failed! Try other username ');
-        }else{
-            alert('Registration Successful')
-            navigate('/login');
+      
+        try {
+          const response = await fetch('http://localhost:4000/register', {
+            method: 'POST',
+            body: JSON.stringify({ username, password }),
+            headers: { 'Content-Type': 'application/json' },
+          });
+      
+          if (response.status === 400) {
+            throw new Error('Registration Failed! Try another username');
+          }
+      
+          alert('Registration Successful');
+          navigate('/login');
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
         }
-    
-        }
+      }
+      
     
     return(
     <form className="register" onSubmit={register}>

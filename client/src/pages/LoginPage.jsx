@@ -10,27 +10,30 @@ export default function LoginPage(){
 
     const navigate = useNavigate();
 
-    async function login(ev){
+    async function login(ev) {
         ev.preventDefault();
-
-        const response = await fetch('http://localhost:4000/login',{
-            method:'POST',
-            body:JSON.stringify({username, password}),
-            headers:{'Content-Type':'application/json'},
-            credentials:'include',
-        });
-
-        if(response.ok){
-            response.json().then(userInfo => {
-                setUserInfo(userInfo)
-                navigate("/");
-            });
-            
-        }else{
-            alert('wrong credentials');
+      
+        try {
+          const response = await fetch('http://localhost:4000/login', {
+            method: 'POST',
+            body: JSON.stringify({ username, password }),
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+          });
+      
+          if (response.ok) {
+            const userInfo = await response.json();
+            setUserInfo(userInfo);
+            navigate('/');
+          } else if (response.status === 400) {
+            throw new Error('Wrong credentials');
+          }
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
         }
- 
-    }
+      }
+      
 
     return(
         <form className="login" onSubmit={login}>

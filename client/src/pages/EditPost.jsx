@@ -23,28 +23,33 @@ export default function EditPost() {
 
   async function updatePost(ev) {
     ev.preventDefault();
-    const data = new FormData();
-    data.set('title', title);
-    data.set('summary', summary);
-    data.set('content', content);
-    data.set('id', id);
-    if (files?.[0]) {
-      data.set('file', files?.[0]);
-    }
-    const response = await fetch('http://localhost:4000/post', {
-      method: 'PUT',
-      body: data,
-      credentials: 'include',
-    });
-
-    if (response.ok) {
-      navigate('/post/'+id);
-    }
-    if(response.status === 400){
-        alert('You are not the author');
+  
+    try {
+      const data = new FormData();
+      data.set('title', title);
+      data.set('summary', summary);
+      data.set('content', content);
+      data.set('id', id);
+      if (files?.[0]) {
+        data.set('file', files?.[0]);
+      }
+      const response = await fetch('http://localhost:4000/post', {
+        method: 'PUT',
+        body: data,
+        credentials: 'include',
+      });
+  
+      if (response.ok) {
+        navigate('/post/' + id);
+      } else if (response.status === 400) {
+        throw new Error('You are not the author');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
     }
   }
-
+  
   return (
     <form onSubmit={updatePost}>
         

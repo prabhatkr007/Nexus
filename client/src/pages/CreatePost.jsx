@@ -36,23 +36,24 @@ export default function CreatePost(){
         data.set('content', content);
         data.set('file',files[0]);
 
-       const response= await fetch('http://localhost:4000/post',{
-            method:'POST',
-            body:data,
-            credentials:'include',
-        });
-
-        if(response.ok){
+        try {
+          const response = await fetch('http://localhost:4000/post', {
+            method: 'POST',
+            body: data,
+            credentials: 'include',
+          });
+        
+          if (response.ok) {
             navigate('/');
+          } else if (response.status === 500) {
+            throw new Error('Upload image file!');
+          }
+        } catch (error) {
+          console.error(error);
+          alert(error.message);
         }
-        if(response.status === 500){
-          alert('Upload image file !')
-        }
-    }
-
-
-  
-
+      }
+        
 
     return(
     <form onSubmit={createNewPost}>
