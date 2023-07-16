@@ -13,11 +13,13 @@ const multer = require('multer');
 const uploadMiddleware = multer({dest:'uploads/'});
 const fs = require('fs');
 
+
+
 const app = express();
 const jwt = require('jsonwebtoken');
 
 require('./DB/conn.js');
-
+const { ObjectId } = require('mongoose').Types;
 
 //middleware
 app.use(cors({
@@ -172,6 +174,26 @@ app.get('/post/:id', async (req, res) => {
     res.json(postDoc);
 
 })
+
+app.delete('/post/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json('Invalid post ID');
+      }
+  
+      const postDoc = await Post.findByIdAndDelete(id);
+      if (!postDoc) {
+        return res.status(404).json('Post not found');
+      }
+  
+      res.json('Post deleted successfully');
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Internal Server Error');
+    }
+  });
+  
 
 app.use((err, req, res, next) => {
     console.error(err);
