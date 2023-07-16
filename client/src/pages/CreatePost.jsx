@@ -45,12 +45,19 @@ export default function CreatePost(){
         
           if (response.ok) {
             navigate('/');
-          } else if (response.status === 500) {
+          } else if(response.status === 401){
+            alert('Please Login !')
+            navigate('/login');
+          }
+          else if (response.status === 400) {
             throw new Error('Upload image file!');
+          }
+          else if (response.status === 500) {
+            alert('Fill fields properly');
           }
         } catch (error) {
           console.error(error);
-          alert(error.message);
+          alert(error);
         }
       }
         

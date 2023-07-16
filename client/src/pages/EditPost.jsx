@@ -41,7 +41,11 @@ export default function EditPost() {
   
       if (response.ok) {
         navigate('/post/' + id);
-      } else if (response.status === 400) {
+      } else if(response.status === 401){
+        alert('Login first !')
+        navigate('/login');
+      }
+      else if (response.status === 400) {
         navigate('/post/' + id);
         throw new Error('You are not the author');
         

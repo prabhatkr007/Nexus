@@ -36,42 +36,65 @@ app.get('/', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-    try{
-        const userDoc = await User.create({ username, 
-            password:bcrypt.hashSync(password,salt) });
-        res.json(userDoc);
-    } catch(e){
-        console.log(e);
-        res.status(400).json(e);
-    }
-});
-
-app.post('/login', async (req,res) => {
-    const {username, password} = req.body;
-    const userDoc = await User.findOne({username});
-    
-    const passOk = bcrypt.compareSync(password, userDoc.password);
+    const { username, password } = req.body;
   
-    if(passOk){
-        //logedin
-        jwt.sign({username,id:userDoc.id},secret,{}, (err,token) => {
-
-            if(err) throw err;
-            res.cookie('token',token).json({
-                id:userDoc._id,
-                username,
-            }
-            );
-        });
-        // req.json();,()
-    }else{
-        res.status(400).json('wrong credentials');
+    if (!username || !password) {
+      return res.status(400).json('Username and password are required');
     }
-});
+  
+    try {
+      const userDoc = await User.create({
+        username,
+        password: bcrypt.hashSync(password, salt),
+      });
+      res.json(userDoc);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json(e);
+    }
+  });
+  
+  app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+  
+    if (!username || !password) {
+      return res.status(400).json('Username and password are required');
+    }
+  
+    try {
+      const userDoc = await User.findOne({ username });
+  
+      if (!userDoc) {
+        return res.status(400).json('User not found');
+      }
+  
+      const passOk = bcrypt.compareSync(password, userDoc.password);
+  
+      if (passOk) {
+        jwt.sign({ username, id: userDoc.id }, secret, {}, (err, token) => {
+          if (err) throw err;
+          res
+            .cookie('token', token)
+            .json({
+              id: userDoc._id,
+              username,
+            });
+        });
+      } else {
+        res.status(400).json('Wrong credentials');
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).json('Internal Server Error');
+    }
+  });
+  
 
 app.get('/profile' , (req, res ) => {
     const{token} = req.cookies;
+    if (!token) {
+        return res.status(401).json('Unauthorized: Token is missing');
+      }
     jwt.verify(token,secret,{}, (err,info) =>{
         if(err) throw err;
         else{
@@ -87,13 +110,16 @@ app.post('/logout',(req, res) => {
 
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
     try {
-      const { originalname, path } = req.file;
-      const parts = originalname.split('.');
-      const ext = parts[parts.length - 1];
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
       const newPath = path + '.' + ext;
-      fs.renameSync(path, newPath);
+        fs.renameSync(path, newPath);
   
       const { token } = req.cookies;
+      if (!token) {
+        return res.status(401).json('Unauthorized: Token is missing');
+      }
       jwt.verify(token, secret, {}, async (err, info) => {
         if (err) throw err;
   
@@ -113,6 +139,7 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       res.status(500).json('Internal Server Error');
     }
   });
+  
 
   app.put('/post', uploadMiddleware.single('file'), async (req, res) => {
     try {
@@ -126,6 +153,9 @@ app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       }
   
       const { token } = req.cookies;
+      if (!token) {
+        return res.status(401).json('Unauthorized: Token is missing');
+      }
       jwt.verify(token, secret, {}, async (err, info) => {
         if (err) throw err;
   
@@ -181,13 +211,20 @@ app.delete('/post/:id', async (req, res) => {
       if (!ObjectId.isValid(id)) {
         return res.status(400).json('Invalid post ID');
       }
-  
-      const postDoc = await Post.findByIdAndDelete(id);
-      if (!postDoc) {
-        return res.status(404).json('Post not found');
+      const { token } = req.cookies;
+      if (!token) {
+        return res.status(401).json('Unauthorized: Token is missing');
       }
+      jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
   
-      res.json('Post deleted successfully');
+        const postDoc = await Post.findByIdAndDelete(id);
+        if (!postDoc) {
+          return res.status(404).json('Post not found');
+        }
+  
+        res.json('Post deleted successfully');
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json('Internal Server Error');
