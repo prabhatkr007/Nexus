@@ -1,11 +1,12 @@
 
 import {useState} from 'react'
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function RegisterPage(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     async function register(ev) {
         ev.preventDefault();
@@ -19,7 +20,7 @@ export default function RegisterPage(){
             alert('Registration Failed! Try other username ');
         }else{
             alert('Registration Successful')
-            Navigate('/login');
+            navigate('/login');
         }
     
         }
