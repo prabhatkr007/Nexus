@@ -42,7 +42,9 @@ export default function EditPost() {
       if (response.ok) {
         navigate('/post/' + id);
       } else if (response.status === 400) {
+        navigate('/post/' + id);
         throw new Error('You are not the author');
+        
       }
     } catch (error) {
       console.error(error);
