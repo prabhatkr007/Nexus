@@ -1,5 +1,6 @@
 
 import {useState} from 'react'
+import { Navigate } from 'react-router-dom';
 
 
 export default function RegisterPage(){
@@ -18,6 +19,7 @@ export default function RegisterPage(){
             alert('Registration Failed! Try other username ');
         }else{
             alert('Registration Successful')
+            Navigate('/login');
         }
     
         }
