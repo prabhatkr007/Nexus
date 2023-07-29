@@ -21,7 +21,7 @@ export default function Header() {
   }, [userInfo]);
 
   function logout() {
-    fetch('http://localhost:4000/logout', {
+    fetch('https://blog-backend-ne6c.onrender.com/register/logout', {
       credentials: 'include',
       method: 'POST',
     })
