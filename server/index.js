@@ -71,10 +71,10 @@ app.post('/register', async (req, res) => {
       const passOk = bcrypt.compareSync(password, userDoc.password);
   
       if (passOk) {
-        jwt.sign({ username, id: userDoc.id }, secret, {}, (err, token) => {
+        jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
           if (err) throw err;
           res
-            .cookie('token', token)
+            .cookie('token', token, { httpOnly: true, secure: true }) // Set httpOnly and secure attributes for production
             .json({
               id: userDoc._id,
               username,
@@ -88,6 +88,7 @@ app.post('/register', async (req, res) => {
       res.status(500).json('Internal Server Error');
     }
   });
+  
   
 
 app.get('/profile' , (req, res ) => {
