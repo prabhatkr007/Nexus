@@ -6,7 +6,7 @@ export default function Post({ _id,title, summary, cover, content,createdAt,auth
       <div className='post'>
         <div className="image">
             <Link to = {`post/${_id}`}>
-          <img src={'http://localhost:4000/'+cover} alt="thumbnail" />
+          <img src={'https://blog-backend-ne6c.onrender.com/'+cover} alt="thumbnail" />
           </Link>
         </div>
         <div className='text'>
