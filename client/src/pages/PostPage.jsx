@@ -10,7 +10,7 @@ export default function PostPage() {
     const navigate = useNavigate();
   
     useEffect(() => {
-      fetch(`http://localhost:4000/post/${id}`)
+      fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`)
         .then(response => {
           response.json().then(postInfo => {
             setPostInfo(postInfo);
@@ -24,7 +24,7 @@ export default function PostPage() {
         const confirmDelete = window.confirm('Are you sure you want to delete this post?');
         if (confirmDelete) {
           try {
-            const response = await fetch(`http://localhost:4000/post/${id}`, {
+            const response = await fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`, {
               method: 'DELETE',
               credentials: 'include',
             });
@@ -61,7 +61,7 @@ export default function PostPage() {
         )}
   
         <div className="image">
-          <img src={`http://localhost:4000/${postInfo.cover}`} alt="thumbnail" />
+          <img src={`https://blog-backend-ne6c.onrender.com/${postInfo.cover}`} alt="thumbnail" />
         </div>
   
         <div className='content' dangerouslySetInnerHTML={{ __html: postInfo.content }}>

@@ -24,7 +24,7 @@ const { ObjectId } = require('mongoose').Types;
 //middleware
 app.use(cors({
     credentials: true,
-    origin:'http://localhost:3000'
+    origin:'https://blog-app-nine-rust.vercel.app'
 }));
 
 app.use(express.json());
