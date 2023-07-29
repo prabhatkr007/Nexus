@@ -58,7 +58,8 @@ div.post{
 div.post div.text h2{
   margin: 0;
   font-size: 1.57rem;
-  
+  text-decoration: none;
+  color: #222;
 }
 
 div.post p.info{
