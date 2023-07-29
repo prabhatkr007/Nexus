@@ -74,7 +74,7 @@ app.post('/register', async (req, res) => {
         jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
           if (err) throw err;
           res
-            .cookie('token', token, { httpOnly: true, secure: true }) // Set httpOnly and secure attributes for production
+            .cookie('token', token, { httpOnly: true, secure: true  ,sameSite: 'none'}) // Set httpOnly and secure attributes for production
             .json({
               id: userDoc._id,
               username,
