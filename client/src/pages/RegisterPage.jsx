@@ -6,10 +6,12 @@ import { useNavigate } from 'react-router-dom';
 export default function RegisterPage(){
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     async function register(ev) {
         ev.preventDefault();
+        setLoading(true)
       
         try {
           const response = await fetch('https://blog-backend-ne6c.onrender.com/register', {
@@ -26,10 +28,19 @@ export default function RegisterPage(){
           navigate('/login');
         } catch (error) {
           console.error(error);
+          setLoading(false);
           alert(error.message);
+
         }
       }
       
+      if (loading) {
+        return (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        );
+      }
     
     return(
     <form className="register" onSubmit={register}>

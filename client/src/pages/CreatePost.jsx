@@ -25,11 +25,13 @@ export default function CreatePost(){
     const[summary, setSummary] = useState('');
     const[content, setContent] = useState('');
     const[files, setFiles] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     async function createNewPost(ev){
 
         ev.preventDefault();
+        setLoading(true)
         const data = new FormData();
         data.set('title',title);
         data.set('summary',summary);
@@ -47,20 +49,32 @@ export default function CreatePost(){
             navigate('/');
           } else if(response.status === 401){
             alert('Please Login !')
+            setLoading(false)
             navigate('/login');
           }
           else if (response.status === 400) {
             throw new Error('Upload image file!');
+            setLoading(false)
           }
           else if (response.status === 500) {
             alert('Fill fields properly');
+            setLoading(false)
           }
         } catch (error) {
+          setLoading(false)
           console.error(error);
-          alert(error);
+          alert(error.message);
         }
       }
         
+      if (loading) {
+        return (
+          <div className="loader-container">
+            <div className="loader"></div>
+          </div>
+        );
+      }
+    
 
     return(
     <form onSubmit={createNewPost}>

@@ -8,6 +8,7 @@ export default function EditPost() {
   const [summary,setSummary] = useState('');
   const [content,setContent] = useState('');
   const [files, setFiles] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export default function EditPost() {
 
   async function updatePost(ev) {
     ev.preventDefault();
+      setLoading(true);
   
     try {
       const data = new FormData();
@@ -40,6 +42,7 @@ export default function EditPost() {
       });
   
       if (response.ok) {
+       
         navigate('/post/' + id);
       } else if(response.status === 401){
         alert('Login first !')
@@ -55,7 +58,14 @@ export default function EditPost() {
       alert(error.message);
     }
   }
-  
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={updatePost}>
         

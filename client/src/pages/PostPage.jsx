@@ -1,48 +1,67 @@
+import React, { useContext, useEffect, useState } from "react";
 import { formatISO9075 } from "date-fns";
-import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { userContext } from "../userContext";
 
 export default function PostPage() {
-    const { id } = useParams();
-    const [postInfo, setPostInfo] = useState(null);
-    const { userInfo } = useContext(userContext);
-    const navigate = useNavigate();
-  
-    useEffect(() => {
-      fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`)
-        .then(response => {
-          response.json().then(postInfo => {
-            setPostInfo(postInfo);
-          });
-        });
-    }, [id]);
-  
-    if (!postInfo) return null;
-  
-    const handleDeletePost = async () => {
-        const confirmDelete = window.confirm('Are you sure you want to delete this post?');
-        if (confirmDelete) {
-          try {
-            const response = await fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`, {
-              method: 'DELETE',
-              credentials: 'include',
-            });
-            if (response.ok) {
-              navigate('/');
-            } else if (response.status === 404) {
-              alert('Post not found');
-            } else {
-              alert('Failed to delete post');
-            }
-          } catch (error) {
-            console.error(error);
-            alert('An error occurred while deleting the post');
-          }
+  const { id } = useParams();
+  const [postInfo, setPostInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { userInfo } = useContext(userContext);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-      };
-      
-  
+        return response.json();
+      })
+      .then(postInfo => {
+        setPostInfo(postInfo);
+        setLoading(false);
+      })
+      .catch(error => {
+        alert(error.message);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (!postInfo) return null;
+
+  const handleDeletePost = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this post?');
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`https://blog-backend-ne6c.onrender.com/post/${id}`, {
+          method: 'DELETE',
+          credentials: 'include',
+        });
+        if (response.ok) {
+          navigate('/');
+        } else if (response.status === 404) {
+          alert('Post not found');
+        } else {
+          alert('Failed to delete post');
+        }
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while deleting the post');
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+    );
+  }
+
+
     return (
       <div className="post-page">
         <h1>{postInfo.title}</h1>
