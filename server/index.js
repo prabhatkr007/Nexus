@@ -105,8 +105,15 @@ app.get('/profile' , (req, res ) => {
 
 });
 
-app.post('/logout',(req, res) => {
-    res.cookie('token','').json('logout');
+app.post('/logout', (req, res) => {
+  res
+    .cookie('token', null, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      expires: new Date(0),
+    })
+    .json('logout');
 });
 
 app.post('/post', uploadMiddleware.single('file'), async (req, res) => {
