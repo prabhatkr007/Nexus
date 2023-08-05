@@ -2,7 +2,7 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://blog-frontend-kzkv.onrender.com/api/:path*"
+        "destination": "https://blog-backend-ne6c.onrender.com/api/:path*"
       }
     ]
   }
