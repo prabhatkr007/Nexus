@@ -54,7 +54,7 @@ export default function CreatePost(){
           }
           else if (response.status === 400) {
             throw new Error('Upload image file!');
-            setLoading(false)
+          
           }
           else if (response.status === 500) {
             alert('Fill fields properly');
@@ -89,13 +89,15 @@ export default function CreatePost(){
         onChange={ev => setSummary(ev.target.value)}/>
 
 
-        <input type="file" 
+        <input type="file"
+        accept="image/*" 
         onChange={ev => setFiles(ev.target.files)}/>
 
         <ReactQuill value={content} 
         onChange={newValue => setContent(newValue)}
         modules={modules} 
-        formats={formats}/>
+        formats={formats}
+        placeholder='Write your Blog here...'/>
 
         <button style={{marginTop:'5px'}}>Create Post</button>
 

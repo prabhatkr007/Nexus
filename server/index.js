@@ -23,11 +23,15 @@ app.use(cookieParser());
 app.use('/api/uploads', express.static(__dirname + '/uploads'));
 app.use('/api',apiRoutes);
 
+app.get('/', (req, res) => {
+  res.json('server is Ok');
+});
+
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json('Internal Server Error');
   });
   
 app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}/api`);
+  console.log(`Server is running at http://localhost:${PORT}`);
 });

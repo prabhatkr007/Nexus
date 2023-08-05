@@ -20,6 +20,23 @@ export default function Header() {
     }
   }, [userInfo]);
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (userInfo) {
+        const response = await fetch('api/profile', {
+          credentials: 'include',
+        });
+  
+        if (response.status === 401) {
+          setUserInfo({});
+        }
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
+  
+
   function logout() {
     fetch('api/logout', {
       credentials: 'include',
