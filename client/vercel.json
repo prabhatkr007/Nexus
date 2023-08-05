@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "https://blog-frontend-kzkv.onrender.com/api/:path*"
+      }
+    ]
+  }
+  
