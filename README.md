@@ -18,12 +18,6 @@ Welcome to the MERN Blog App! This is a full-stack web application built using t
 - Add Comments: Authenticated users can add comments to blog posts.
 - Responsive Design: The app is designed to work seamlessly on desktops, tablets, and mobile devices.
 
-## Technologies Used
-
-- MongoDB: A NoSQL database used to store blog post and user data.
-- Express.js: A backend web application framework for Node.js, providing a robust set of features for web and mobile applications.
-- React.js: A popular JavaScript library for building user interfaces.
-- Node.js: A server-side runtime environment for executing JavaScript code.
 
 ## Installation and Setup
 
