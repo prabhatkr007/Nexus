@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
 
-  let targetURL = 'http://localhost:4000';
+  let targetURL = 'https://blog-backend-ne6c.onrender.com';
 
 
   if (process.env.REACT_APP_API_URL) {
