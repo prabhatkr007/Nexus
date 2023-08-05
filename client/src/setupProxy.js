@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
 
-  let targetURL = 'https://localhost:4000';
+  let targetURL = 'http://localhost:4000';
 
 
   app.use(
