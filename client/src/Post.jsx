@@ -5,12 +5,12 @@ export default function Post({ _id,title, summary, cover, content,createdAt,auth
     return (
       <div className='post'>
         <div className="image">
-            <Link to = {`post/${_id}`}>
-          <img src={'https://blog-backend-ne6c.onrender.com/'+cover} alt="thumbnail" />
+            <Link to = {`article/${_id}`}>
+          <img src={'api/'+cover} alt="thumbnail" />
           </Link>
         </div>
         <div className='text'>
-        <Link to = {`/post/${_id}`}>
+        <Link to = {`/article/${_id}`}>
           <h2>{title}</h2>
         </Link>
           <p className="info">

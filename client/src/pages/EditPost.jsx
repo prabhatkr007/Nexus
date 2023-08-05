@@ -12,7 +12,7 @@ export default function EditPost() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('https://blog-backend-ne6c.onrender.com/post/'+id)
+    fetch('api/post/'+id)
       .then(response => {
         response.json().then(postInfo => {
           setTitle(postInfo.title);
@@ -35,7 +35,7 @@ export default function EditPost() {
       if (files?.[0]) {
         data.set('file', files?.[0]);
       }
-      const response = await fetch('https://blog-backend-ne6c.onrender.com/post', {
+      const response = await fetch('api/post', {
         method: 'PUT',
         body: data,
         credentials: 'include',
@@ -43,13 +43,13 @@ export default function EditPost() {
   
       if (response.ok) {
        
-        navigate('/post/' + id);
+        navigate('/article/' + id);
       } else if(response.status === 401){
         alert('Login first !')
         navigate('/login');
       }
       else if (response.status === 400) {
-        navigate('/post/' + id);
+        navigate('/article/' + id);
         throw new Error('You are not the author');
         
       }

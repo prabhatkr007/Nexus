@@ -39,7 +39,7 @@ export default function CreatePost(){
         data.set('file',files[0]);
 
         try {
-          const response = await fetch('https://blog-backend-ne6c.onrender.com/post', {
+          const response = await fetch('api/post', {
             method: 'POST',
             body: data,
             credentials: 'include',

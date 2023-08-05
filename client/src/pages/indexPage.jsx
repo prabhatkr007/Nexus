@@ -9,7 +9,7 @@ export default function IndexPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('https://blog-backend-ne6c.onrender.com/post')
+    fetch('api/post')
       .then(response => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -41,7 +41,7 @@ export default function IndexPage() {
   return (
     <>
       {posts.length > 0 && posts.map(post => (
-        <Post key={post.id} {...post} />
+        <Post key={post._id} {...post} /> // Use 'post._id' as the key
       ))}
     </>
   );

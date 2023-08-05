@@ -14,7 +14,7 @@ export default function RegisterPage(){
         setLoading(true)
       
         try {
-          const response = await fetch('https://blog-backend-ne6c.onrender.com/register', {
+          const response = await fetch('api/register', {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: { 'Content-Type': 'application/json' },
