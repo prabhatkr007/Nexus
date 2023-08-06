@@ -33,6 +33,7 @@ export default function PostPage() {
   if (!postInfo) return null;
 
   const handleDeletePost = async () => {
+    setLoading(true);
     const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     if (confirmDelete) {
       try {
@@ -43,11 +44,14 @@ export default function PostPage() {
         if (response.ok) {
           navigate('/');
         } else if (response.status === 404) {
+          setLoading(false);
           alert('Post not found');
         } else {
+          setLoading(false);
           alert('Failed to delete post');
         }
       } catch (error) {
+        setLoading(false);
         console.error(error);
         console.log(error);
         alert('An error occurred while deleting the post');
