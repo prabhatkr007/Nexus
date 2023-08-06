@@ -99,12 +99,14 @@ router.get('/', (req, res) => {
   
   router.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       try {
+        let newPath = null;
+        if (req.file) {
           const { originalname, path } = req.file;
           const parts = originalname.split('.');
           const ext = parts[parts.length - 1];
         const newPath = path + '.' + ext;
           fs.renameSync(path, newPath);
-    
+        }
         const { token } = req.cookies;
         if (!token) {
           return res.status(401).json('Unauthorized: Token is missing');
