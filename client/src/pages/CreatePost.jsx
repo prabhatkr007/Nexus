@@ -90,7 +90,6 @@ export default function CreatePost(){
 
 
         <input type="file"
-        accept="image/*" 
         onChange={ev => setFiles(ev.target.files)}/>
 
         <ReactQuill value={content} 

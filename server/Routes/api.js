@@ -9,6 +9,7 @@ const multer = require('multer');
 const uploadMiddleware = multer({dest:'uploads/'});
 const fs = require('fs');
 const salt = bcrypt.genSaltSync(10);
+const path = require('path');
 
 const router = express.Router();
 
@@ -99,14 +100,13 @@ router.get('/', (req, res) => {
   
   router.post('/post', uploadMiddleware.single('file'), async (req, res) => {
       try {
-        let newPath = null;
-        if (req.file) {
+      
           const { originalname, path } = req.file;
           const parts = originalname.split('.');
           const ext = parts[parts.length - 1];
         const newPath = path + '.' + ext;
           fs.renameSync(path, newPath);
-        }
+        
         const { token } = req.cookies;
         if (!token) {
           return res.status(401).json('Unauthorized: Token is missing');
@@ -147,6 +147,7 @@ router.get('/', (req, res) => {
         if (!token) {
           return res.status(401).json('Unauthorized: Token is missing');
         }
+    
         jwt.verify(token, secret, {}, async (err, info) => {
           if (err) throw err;
     
@@ -159,6 +160,16 @@ router.get('/', (req, res) => {
           const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
           if (!isAuthor) {
             return res.status(400).json('You are not the author');
+          }
+    
+          // Delete the previously associated file in /uploads directory
+          if (newPath && postDoc.cover) {
+            const prevFilePath = path.join(__dirname, '../', postDoc.cover);
+            try {
+              fs.unlinkSync(prevFilePath); // Remove the previous file from /uploads
+            } catch (err) {
+              console.error('Error while deleting the previously associated file:', err);
+            }
           }
     
           postDoc.title = title;
@@ -176,7 +187,6 @@ router.get('/', (req, res) => {
       }
     });
     
-  
     
   
   
@@ -196,32 +206,55 @@ router.get('/', (req, res) => {
   
   })
   
+
+  
   router.delete('/post/:id', async (req, res) => {
-      try {
-        const { id } = req.params;
-        if (!ObjectId.isValid(id)) {
-          return res.status(400).json('Invalid post ID');
-        }
-        const { token } = req.cookies;
-        if (!token) {
-          return res.status(401).json('Unauthorized: Token is missing');
-        }
-        jwt.verify(token, secret, {}, async (err, info) => {
-          if (err) throw err;
-    
-          const postDoc = await Post.findByIdAndDelete(id);
-          if (!postDoc) {
-            return res.status(404).json('Post not found');
-          }
-    
-          res.json('Post deleted successfully');
-        });
-      } catch (error) {
-        console.error(error);
-        res.status(500).json('Internal Server Error');
+    try {
+      const { id } = req.params;
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json('Invalid post ID');
       }
-    });
-    
+  
+      const { token } = req.cookies;
+      if (!token) {
+        return res.status(401).json('Unauthorized: Token is missing');
+      }
+  
+      jwt.verify(token, secret, {}, async (err, info) => {
+        if (err) throw err;
+  
+        const postDoc = await Post.findById(id);
+        if (!postDoc) {
+          return res.status(404).json('Post not found');
+        }
+  
+        // Check if the logged-in user is the author of the post
+        const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
+        if (!isAuthor) {
+          return res.status(400).json('You are not the author');
+        }
+  
+        // Delete the associated file in /uploads directory
+        if (postDoc.cover) {
+          const filePath = path.join(__dirname, '../', postDoc.cover);
+          try {
+            fs.unlinkSync(filePath); // Remove the file from /uploads
+          } catch (err) {
+            console.error('Error while deleting the associated file:', err);
+          }
+        }
+  
+        // Delete the post from the database
+        await Post.findByIdAndDelete(id);
+  
+        res.json('Post and associated file deleted successfully');
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json('Internal Server Error');
+    }
+  });
+  
 
     module.exports = router;
   
