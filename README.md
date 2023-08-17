@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Welcome to the MERN Blog App! This is a full-stack web application built using the MERN stack, which stands for MongoDB, Express.js, React.js, and Node.js. The app provides a platform for users to create, read, update, and delete blog posts. It also allows users to interact with each other by adding comments to blog posts.
+This is a full-stack web application built using the MERN stack, which stands for MongoDB, Express.js, React.js, and Node.js. The app provides a platform for users to create, read, update, and delete blog posts. It also allows users to interact with each other by adding comments to blog posts.
 
 ## Features
 
@@ -50,7 +50,7 @@ Make sure you have Node.js and MongoDB installed on your machine.
 ## How to Use
 
 1. Open your web browser and go to `http://localhost:3000` to access the app.
-2. If you are a new user, click on the "Sign Up" link to create an account.
+2. If you are a new user, click on the "Register" link to create an account.
 3. Once logged in, you can create new blog posts, view existing posts, update or delete your posts, and add comments to other posts.
 
 ## Future Improvements
