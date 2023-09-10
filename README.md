@@ -64,7 +64,5 @@ Make sure you have Node.js and MongoDB installed on your machine.
 
 ---
 
-Thank you for using the MERN Blog App! We hope you find it useful for managing your blog posts and engaging with your audience. If you encounter any issues or have suggestions for improvement, please feel free to raise an issue or submit a pull request on the GitHub repository. Happy blogging!
-
 
 
