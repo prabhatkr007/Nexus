@@ -1,10 +1,10 @@
-# MERN Blog App
+# Nexus
 
 ![MERN Blog App](https://i.imgur.com/iuCB5RZ.png)
 
 ## Introduction
 
-This is a full-stack web application built using the MERN stack, which stands for MongoDB, Express.js, React.js, and Node.js. The app provides a platform for users to create, read, update, and delete blog posts. It also allows users to interact with each other by adding comments to blog posts.
+Nexus is a full-stack web application built using the MERN stack, which stands for MongoDB, Express.js, React.js, and Node.js. The app provides a platform for users to create, read, update, and delete blog posts. It also allows users to interact with each other by adding comments to blog posts.
 
 ## Features
 
