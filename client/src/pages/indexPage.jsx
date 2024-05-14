@@ -30,6 +30,7 @@ export default function IndexPage() {
     return (
       <div className="loader-container">
         <div className="loader"></div>
+        <h3>Free Server Guys, Please Wait !🦜 </h3>
       </div>
     );
   }
