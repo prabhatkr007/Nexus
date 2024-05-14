@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Post from "../Post";
+
 import "../styles/loader.css"; // Import the CSS for the circle loading animation
 
-export default function IndexPage({loading = loading, setLoading = setLoading}) {
+export default function IndexPage() {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -18,15 +20,12 @@ export default function IndexPage({loading = loading, setLoading = setLoading}) 
       } catch (error) {
         setError(error.message);
       } finally {
-        setLoading(false); // Set loading to false once data is fetched
+        setLoading(false);
       }
     };
 
-    if (loading) { // Only fetch if loading is true
-      fetchPosts();
-    }
-
-  }, [loading]); // Add loading as a dependency
+    fetchPosts();
+  }, []);
 
   if (loading) {
     return (
@@ -44,8 +43,8 @@ export default function IndexPage({loading = loading, setLoading = setLoading}) 
   return (
     <>
       {posts.length > 0 && posts.map(post => (
-        <Post key={post._id} {...post} />
+        <Post key={post._id} {...post} /> 
       ))}
     </>
   );
-}
+};
