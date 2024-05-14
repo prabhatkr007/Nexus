@@ -9,21 +9,22 @@ export default function IndexPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch('api/post')
-      .then(response => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('api/post');
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json();
-      })
-      .then(posts => {
-        setLoading(false);
-        setPosts(posts);
-      })
-      .catch(error => {
-        setLoading(false);
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
         setError(error.message);
-      });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
   }, []);
 
   if (loading) {
@@ -42,8 +43,8 @@ export default function IndexPage() {
   return (
     <>
       {posts.length > 0 && posts.map(post => (
-        <Post key={post._id} {...post} /> // Use 'post._id' as the key
+        <Post key={post._id} {...post} /> 
       ))}
     </>
   );
-}
+};
