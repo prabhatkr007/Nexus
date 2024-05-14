@@ -41,6 +41,7 @@ export default function PostPage() {
           credentials: 'include',
         });
         if (response.ok) {
+          setLoading(true)
           navigate('/');
         } else if (response.status === 404) {
           alert('Post not found');
@@ -54,14 +55,6 @@ export default function PostPage() {
       }
     }
   };
-
-  if (loading) {
-    return (
-      <div className="loader-container">
-        <div className="loader"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="post-page">
