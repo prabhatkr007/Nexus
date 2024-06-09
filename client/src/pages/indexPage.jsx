@@ -12,6 +12,10 @@ export default function IndexPage() {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+      if (data.length == 0) {
+        throw new Error("No posts to show");
+      }
+      
       setPosts(data);
     } catch (error) {
       setError(error.message);
@@ -29,14 +33,9 @@ export default function IndexPage() {
   }
 
   return (
-    <>
-      {posts.length > 0 ? (
         posts.map(post => (
           <Post key={post._id} {...post} />
-        ))
-      ) : (
-        <div>No posts available.</div>
-      )}
-    </>
-  );
+        )
+  )
+);
 };
