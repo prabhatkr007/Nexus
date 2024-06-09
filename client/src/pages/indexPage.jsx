@@ -12,10 +12,10 @@ export default function IndexPage() {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      if (data.length == 0) {
+      if (data.length === 0) {
         throw new Error("No posts to show");
       }
-      
+
       setPosts(data);
     } catch (error) {
       setError(error.message);
