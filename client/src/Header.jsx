@@ -1,9 +1,29 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { userContext } from './userContext';
+import './styles/loader.css'
 
 export default function Header() {
   const { setUserInfo, userInfo } = useContext(userContext);
+  const [loading, setLoading] = useState(true);
+
+  const fetchProfile = async () => {
+    setLoading(true);
+    try {
+      await fetch('api/profile', {
+        credentials: 'include',
+      });
+      setLoading(false);
+    } catch (err) {
+      console.log(err.message);
+      setLoading(false); // Set loading to false even if there's an error
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -53,6 +73,7 @@ export default function Header() {
   const username = userInfo?.username;
 
   return (
+    <>
     <header>
       <Link to='/' className='logo'>Nexus</Link>
 
@@ -72,5 +93,15 @@ export default function Header() {
         )}
       </nav>
     </header>
+
+    {loading &&(
+      <div className="loader-container">
+        <div className="loader"></div>
+        <h3>Free Server Guys, Please Wait !🦜</h3>
+      </div>
+    )
+  }
+    
+  </>
   )
 }

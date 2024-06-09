@@ -6,7 +6,6 @@ import { userContext } from "../userContext";
 export default function PostPage() {
   const { id } = useParams();
   const [postInfo, setPostInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
   const { userInfo } = useContext(userContext);
 
   const navigate = useNavigate();
@@ -22,11 +21,9 @@ export default function PostPage() {
       })
       .then(postInfo => {
         setPostInfo(postInfo);
-        setLoading(false);
       })
       .catch(error => {
         alert(error.message);
-        setLoading(false);
       });
   }, [id]);
 
@@ -54,14 +51,6 @@ export default function PostPage() {
       }
     }
   };
-
-  if (loading) {
-    return (
-      <div className="loader-container">
-        <div className="loader"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="post-page">
