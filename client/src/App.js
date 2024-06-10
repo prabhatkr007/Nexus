@@ -24,8 +24,6 @@ function App() {
 
     const user = await response.json()
     setUserInfo(user)
-    localStorage.setItem('userInfo',JSON.stringify(user))
-
     } catch (err) {
       console.log(err.message);
     }

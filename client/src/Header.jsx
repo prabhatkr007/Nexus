@@ -13,7 +13,6 @@ export default function Header() {
     })
     .then(() => {
       setUserInfo({});
-      localStorage.removeItem('userInfo')
     })
     .catch(error => {
       console.log('Logout failed:', error);
