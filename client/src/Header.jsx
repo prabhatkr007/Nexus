@@ -12,8 +12,8 @@ export default function Header() {
       method: 'POST',
     })
     .then(() => {
-      setUserInfo("");
-      localStorage.removeItem('username')
+      setUserInfo({});
+      localStorage.removeItem('userInfo')
     })
     .catch(error => {
       console.log('Logout failed:', error);

@@ -22,21 +22,9 @@ function App() {
         credentials: 'include',
       });
 
-      if (response.status === 401) {
-        localStorage.setItem('username',"")
-      }
-
     const user = await response.json()
-    localStorage.setItem('username',JSON.stringify(user.username))
-    const storedUserInfo = localStorage.getItem("username");
-    const usrname = JSON.parse(storedUserInfo)
-
-    const usrObject = {
-      username : usrname,
-      id : user.id
-    }
-
-    setUserInfo(storedUserInfo ? usrObject : {})
+    setUserInfo(user)
+    localStorage.setItem('userInfo',JSON.stringify(user))
 
     } catch (err) {
       console.log(err.message);
