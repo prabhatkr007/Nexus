@@ -13,10 +13,6 @@ const path = require('path');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.json('server is Ok');
-  });
-  
   router.post('/register', async (req, res) => {
       const { username, password } = req.body;
     
@@ -81,7 +77,7 @@ router.get('/', (req, res) => {
       jwt.verify(token,secret,{}, (err,info) =>{
           if(err) throw err;
           else{
-              res.json('ok')
+              res.json(info)
           }
       });
   
