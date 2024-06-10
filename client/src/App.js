@@ -1,31 +1,69 @@
+import { useState, useEffect } from 'react';
+import {Routes, Route} from "react-router-dom";
+
 import './App.css';
 import Layout from './Layout';
-import {Routes, Route} from "react-router-dom";
 import IndexPage from './pages/indexPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import {UserContextProvider} from './userContext'
+import {userContext} from './userContext'
 import CreatePost from './pages/CreatePost';
 import PostPage from './pages/PostPage';
 import EditPost from './pages/EditPost';
 
 function App() {
+  const [userInfo, setUserInfo] = useState({})
+  const [loading, setLoading] = useState(false);
+
+  const fetchProfile = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('api/profile', {
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        localStorage.setItem('username',"")
+      }
+
+    const user = await response.json()
+    localStorage.setItem('username',JSON.stringify(user.username))
+    const storedUserInfo = localStorage.getItem("username");
+    const usrname = JSON.parse(storedUserInfo)
+
+    const usrObject = {
+      username : usrname,
+      id : user.id
+    }
+
+    setUserInfo(storedUserInfo ? usrObject : {})
+
+    } catch (err) {
+      console.log(err.message);
+    }
+    finally{
+      setLoading(false)
+    }
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+
   return (
-    <UserContextProvider>
-    <Routes>
-    <Route path='/' element={<Layout />} >
-      <Route index element = {<IndexPage />} />
-      <Route path='/login'element={<LoginPage />}/>
-      <Route path='/register'element={<RegisterPage />}/>
-      <Route path='/create' element={<CreatePost />}/>
-      <Route path='/article/:id' element={<PostPage />}/>
-      <Route path='/edit/:id' element={<EditPost />}/>
-    </Route>
-   </Routes>
-
-    </UserContextProvider>
-   
-
+    <userContext.Provider value = {{userInfo, setUserInfo}}>
+      <Routes>
+      <Route path='/' element={<Layout loading = {loading}/>} >
+        <Route index element = {<IndexPage />} />
+        <Route path='/login'element={<LoginPage />}/>
+        <Route path='/register'element={<RegisterPage />}/>
+        <Route path='/create' element={<CreatePost />}/>
+        <Route path='/article/:id' element={<PostPage />}/>
+        <Route path='/edit/:id' element={<EditPost />}/>
+      </Route>
+    </Routes>
+  </userContext.Provider>
   );
 }
 

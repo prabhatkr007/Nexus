@@ -24,7 +24,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         const userInfo = await response.json();
-        setUserInfo(userInfo);
+        setUserInfo({username:userInfo.username});
         navigate("/");
       } else if (response.status === 400) {
         throw new Error("Wrong credentials");
